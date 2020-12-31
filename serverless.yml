@@ -5,6 +5,17 @@ provider:
   runtime: nodejs12.x
   stage: dev
   region: us-east-1
+  iamRoleStatements:
+  - Effect: Allow
+    Action:
+      - dynamodb:Query
+      - dynamodb:Scan
+      - dynamodb:GetItem
+      - dynamodb:PutItem
+      - dynamodb:UpdateItem
+      - dynamodb:DeleteItem
+    Resource:
+      - { "Fn::GetAtt": ["ArticlesDynamoDBTable", "Arn" ] }
 functions:
   hello:
     handler: src/handler.hello
@@ -12,3 +23,18 @@ functions:
       - http:
           path: /
           method: GET
+resources:
+  Resources:
+    ArticlesDynamoDBTable:
+      Type: 'AWS::DynamoDB::Table'
+      Properties:
+        AttributeDefinitions:
+          -
+            AttributeName: articleId
+            AttributeType: S
+        KeySchema:
+          -
+            AttributeName: articleId
+            KeyType: HASH
+        BillingMode: PAY_PER_REQUEST
+        TableName: articles
