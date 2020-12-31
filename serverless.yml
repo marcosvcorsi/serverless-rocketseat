@@ -17,12 +17,22 @@ provider:
     Resource:
       - { "Fn::GetAtt": ["ArticlesDynamoDBTable", "Arn" ] }
 functions:
-  hello:
-    handler: src/handler.hello
+  createArticle:
+    handler: src/handler.createArticle
     events:
       - http:
-          path: /
+          path: /article
+          method: POST
+  getArticle:
+    handler: src/handler.getArticle
+    events:
+      - http:
+          path: /article/{id}
           method: GET
+          request:
+            parameters:
+              paths:
+                id: true
 resources:
   Resources:
     ArticlesDynamoDBTable:

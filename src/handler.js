@@ -1,18 +1,28 @@
-'use strict'
+const articleRepository = require('./repository/article')
 
-module.exports.hello = async event => {
+const createArticle = async event => {
+  const article = JSON.parse(event.body)
+
+  const result = articleRepository.create(article)
+
   return {
     statusCode: 200,
-    body: JSON.stringify(
-      {
-        message: 'Go Serverless v1.0! Your function executed successfully!',
-        input: event,
-      },
-      null,
-      2
-    ),
+    body: JSON.stringify(result),
   }
+}
 
-  // Use this code if you don't use the http event with the LAMBDA-PROXY integration
-  // return { message: 'Go Serverless v1.0! Your function executed successfully!', event };
+const getArticle = async event => {
+  const { id } = JSON.parse(event.pathParameters)
+
+  const result = articleRepository.get(id)
+
+  return {
+    statusCode: 200,
+    body: JSON.stringify(result),
+  }
+}
+
+module.exports = {
+  createArticle,
+  getArticle,
 }
