@@ -12,7 +12,7 @@ const createArticle = async event => {
 }
 
 const getArticle = async event => {
-  const { id } = JSON.parse(event.pathParameters)
+  const { id } = event.pathParameters
 
   const result = await articleRepository.get(id)
 
